@@ -1,0 +1,17 @@
+# WIP
+version: '3'
+services:
+    audio:
+        build: ./audio_authentication
+
+    face:
+        build: ./face_authentication
+        privileged: true
+        devices:
+        - "/dev/video1:/dev/video1"
+        
+    user:
+        build: ./user_interface
+        depends_on: 
+        - audio
+        - face

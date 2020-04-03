@@ -7,6 +7,7 @@ from keras_vggface.vggface import VGGFace
 import numpy as np
 from keras_vggface import utils
 import scipy as sp
+from scipy import spatial
 import cv2
 import os
 import glob
@@ -24,7 +25,7 @@ class FaceIdentify(object):
     """
     Singleton class for real time face identification
     """
-    CASE_PATH = ".\\pretrained_models\\haarcascade_frontalface_alt.xml"
+    CASE_PATH = "./pretrained_models/haarcascade_frontalface_alt.xml"
 
     def __new__(cls, precompute_features_file=None):
         if not hasattr(cls, 'instance'):
@@ -87,7 +88,9 @@ class FaceIdentify(object):
         distances = []
         for person in self.precompute_features_map:
             person_features = person.get("features")
-            distance = sp.spatial.distance.euclidean(person_features, features)
+            # distance = sp.spatial.distance.euclidean(person_features, features)
+            distance = spatial.distance.euclidean(person_features, features) #madia
+
             distances.append(distance)
         min_distance_value = min(distances)
         min_distance_index = distances.index(min_distance_value)
@@ -100,7 +103,7 @@ class FaceIdentify(object):
         face_cascade = cv2.CascadeClassifier(self.CASE_PATH)
 
         # 0 means the default video capture device in OS
-        video_capture = cv2.VideoCapture(0)
+        video_capture = cv2.VideoCapture(1)
         # infinite loop, break by key ESC
         while True:
             if not video_capture.isOpened():
@@ -128,9 +131,8 @@ class FaceIdentify(object):
             # draw results
             for i, face in enumerate(faces):
                 label = "{}".format(predicted_names[i])
-                self.draw_label(frame, (face[0], face[1]), label)
+                print(label)
 
-            cv2.imshow('Keras Faces', frame)
             if cv2.waitKey(5) == 27:  # ESC key press
                 break
         # When everything is done, release the capture

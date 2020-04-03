@@ -1,6 +1,12 @@
-# Audio Visual Identity Verification
+# Audio Visual Identity Verification aka Doorlock
 
 This repository aims to use one-shot learning and a combination of speech and visual verification to authenticate a person for access. Using siamese networks, this project uses a very small example set for a new user in combination with trained siamese networks to classify if a person's voice and face match the small example set above a confidence threshold.
+
+#### How to Run
+
+##### Face Authentication
+1. sudo docker run -it --privileged --device=/dev/video1:/dev/video1 face_auth
+2. Within the container, run python3 face_identify_demo.py
 
 
 #### One-Shot Learning?
