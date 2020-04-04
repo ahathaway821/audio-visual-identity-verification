@@ -1,10 +1,10 @@
 # WIP
 version: '3'
 services:
-    audio:
+    audio_auth:
         build: ./audio_authentication
 
-    face:
+    face_auth:
         build: ./face_authentication
         privileged: true
         devices:

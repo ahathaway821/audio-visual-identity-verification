@@ -8,6 +8,11 @@ This repository aims to use one-shot learning and a combination of speech and vi
 1. sudo docker run -it --privileged --device=/dev/video1:/dev/video1 face_auth
 2. Within the container, run python3 face_identify_demo.py
 
+##### Audio Authentication
+1. cd audio_authentication
+2. docker build -t audio_auth .
+3. docker run -it audio_auth
+4. Within the container, run python3 audio_authentication_inference.py
 
 #### One-Shot Learning?
 
