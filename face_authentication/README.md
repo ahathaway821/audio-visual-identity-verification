@@ -1,12 +1,5 @@
 # Live Face Identification with pre-trained VGGFace2 model
 
-This is complementary source code for my [blog post](https://www.dlology.com/blog/live-face-identification-with-pre-trained-vggface2-model/).
-
- Here is the demo
-
-![face identification demo](https://gitcdn.xyz/cdn/Tony607/blog_statics/master/images/face/face_identification.gif "face identification demo")
-
-
 
 ## Dependencies
 - Python3.5

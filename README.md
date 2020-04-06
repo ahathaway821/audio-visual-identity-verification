@@ -4,6 +4,13 @@ This repository aims to use one-shot learning and a combination of speech and vi
 
 #### How to Run
 
+##### Doorlock User Authentication
+Starts a loop waiting to authenticate a user's face and audio signals.
+
+1. cd src
+2. docker build -t doorlock .
+3. docker run -it --privileged --device=/dev/video1:/dev/video1 doorlock 
+
 ##### Face Authentication
 1. sudo docker run -it --privileged --device=/dev/video1:/dev/video1 face_auth
 2. Within the container, run python3 face_identify_demo.py
