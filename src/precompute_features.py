@@ -78,6 +78,7 @@ class FaceExtractor(object):
             ret, frame = cap.read()
             if ret:
                 frame_counter = frame_counter + 1
+                print(frame_counter)
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 faces = face_cascade.detectMultiScale(
                     gray,
@@ -99,6 +100,8 @@ class FaceExtractor(object):
                     imgfile = os.path.basename(video_file).replace(".","_") +"_"+ str(frame_counter) + ".png"
                     imgfile = os.path.join(save_folder, imgfile)
                     cv2.imwrite(imgfile, face_img)
+            else:
+                break
             if cv2.waitKey(5) == 27:  # ESC key press
                 break
             if cap.get(cv2.CAP_PROP_POS_FRAMES) == cap.get(cv2.CAP_PROP_FRAME_COUNT):
@@ -160,7 +163,7 @@ def main():
         print(save_folder)
         os.makedirs(save_folder, exist_ok=True)
         for video in videos:
-            extractor.extract_faces(video, save_folder)
+            extractor.extract_faces(video, save_folder)     
 
     precompute_features = []
     for i, folder in enumerate(folders):

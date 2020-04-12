@@ -133,7 +133,7 @@ class AudioIdentify(object):
 
     """### Helper Functions"""
 
-    def get_clips(self, clip_path, recorded_byte_array, min_size=1):    
+    def get_clips2(self, clip_path, recorded_byte_array, min_size=1):    
         """
         Splits a long clip in multiple smaller clips with MFCC length of 400. 
         Also discards the final part of the audio file the is not a multiple of 400.
@@ -147,7 +147,7 @@ class AudioIdentify(object):
         wave, sr = librosa.load(clip_path, mono=True)
         wave = wave[::3]
         mfcc = librosa.feature.mfcc(wave, sr=sr)
-            
+        print(f'mfcc: {mfcc.shape[1]}')
         n_clips = int(mfcc.shape[1] / pad_length)
         
         if (n_clips < min_size):
@@ -158,8 +158,20 @@ class AudioIdentify(object):
         ref_clips = []
         for i in range(1, n_clips+1):
             ref_clips.append(mfcc[:, (i-1)*pad_length:i*pad_length])
-        
+        print(f'Ref clips len: {len(ref_clips)}')
         return ref_clips
+
+    def get_clips(self, file_name, recorded_byte_array, min_size=1):
+        max_pad_len=400
+        wave, sr = librosa.load(file_name, mono=True)
+        wave = wave[::3]
+        mfcc = librosa.feature.mfcc(wave, sr=sr)
+        pad_width = max_pad_len - mfcc.shape[1]
+        if (pad_width < 0):
+            pad_width = 0
+            mfcc = mfcc[:, 0:max_pad_len]
+        mfcc = np.pad(mfcc, pad_width=((0,0), (0, pad_width)), mode='constant')
+        return [mfcc.astype(np.float32)]
 
     def setup_voice_system(self):   
         """
@@ -172,7 +184,7 @@ class AudioIdentify(object):
         #if time allows, multiple users to open the door
         
         # expect at least 3 clips from reference recording 
-        ref_clip_path = "./data/audio/x_english_ref.wav"
+        ref_clip_path = "./data/audio/x_english_ref_short.mp3"
         ref_clips = self.get_clips(os.fspath(ref_clip_path), 3)
 
         return ref_clips
@@ -221,15 +233,19 @@ class AudioIdentify(object):
         return left, right
 
     def speech_unlock(self, model, left, right, SCORE_THRESHOLD):
-        score = np.mean(model.predict([left, right]))
+        scores = model.predict([left, right])
+        print('model scores')
+        print(scores)
+        score = np.mean(scores)
         unlock = score > SCORE_THRESHOLD
         return unlock, score
 
     def authenticate_voice(self, unlock_attempt_clip_path):
         #get new trial voice for attempted unlock
-        unlock_attempt_clip_path = "./data/audio/x_english_7.mp3"
+        unlock_attempt_clip_path = "./data/audio/x_english_ref_short_2.mp3"
+        print(f'unlock attempt clip path: {unlock_attempt_clip_path}')
         actual_clips = self.get_user_voice(os.fspath(unlock_attempt_clip_path))
-
+        print(f'actual clips len: {len(actual_clips)}')
         left, right = self.get_inference_dataset(self.ref_clips, actual_clips)
 
         unlock, score = self.speech_unlock(self.model, left, right, SCORE_THRESHOLD)

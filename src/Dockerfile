@@ -61,8 +61,8 @@ RUN apt-get install vim
 ADD data/ /tmp/data
 ADD pretrained_models /tmp/pretrained_models
 ADD precompute_features.py /tmp
+ADD data/precompute_features.pickle /tmp/data
 ADD audio_authentication_inference_en.py /tmp
 ADD face_authentication_inference.py /tmp
 ADD start_doorlock.py /tmp
-ADD setup_doorlock.py /tmp
 ADD requirements.txt /tmp
