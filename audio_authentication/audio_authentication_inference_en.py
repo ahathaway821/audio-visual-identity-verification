@@ -172,7 +172,7 @@ class AudioIdentity(object):
         #if time allows, multiple users to open the door
         
         # expect at least 3 clips from reference recording 
-        ref_clip_path = "./data/audio/x_english_ref.wav"
+        ref_clip_path = "./data/audio/x_english_ref_3.mp3"
         ref_clips = self.get_clips(os.fspath(ref_clip_path), 3)
 
         return ref_clips
@@ -227,7 +227,7 @@ class AudioIdentity(object):
 
     def authenticate_voice(self, unlock_attempt_clip_path):
         #get new trial voice for attempted unlock
-        unlock_attempt_clip_path = "./data/audio/x_english_7.mp3"
+        unlock_attempt_clip_path = "./data/audio/x_english_ref_2.mp3"
         actual_clips = self.get_user_voice(os.fspath(unlock_attempt_clip_path))
 
         left, right = self.get_inference_dataset(self.ref_clips, actual_clips)

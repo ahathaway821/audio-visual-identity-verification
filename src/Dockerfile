@@ -65,4 +65,3 @@ ADD data/precompute_features.pickle /tmp/data
 ADD audio_authentication_inference_en.py /tmp
 ADD face_authentication_inference.py /tmp
 ADD start_doorlock.py /tmp
-ADD requirements.txt /tmp

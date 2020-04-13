@@ -5,9 +5,10 @@ import ibm_boto3
 from ibm_botocore.client import Config, ClientError
 
 import tensorflow as tf
-import keras
-from keras import layers, models, Input, optimizers, metrics, regularizers
-from keras import backend as K
+from tensorflow import keras
+from tensorflow.keras import layers, models, Input, optimizers, metrics, regularizers
+from tensorflow.keras import backend as K
+
 
 import librosa
 
@@ -24,7 +25,7 @@ AUDIO_FILE = 'dev-clips.tgz'
 MFCC_PICKLE = 'mfcc.bin'
 CLIPS_PATH = DATA_PATH + 'dev-clips/'
 TEST_CLIPS = DATA_PATH + 'test-clips/'
-MODEL_NAME = "EN-TF1-20200405-024254"
+MODEL_NAME = "model_en_full"
 BEST_MODEL_FILE = f'{MODEL_NAME}.tgz'
 TEST_RECORDINGS = 'test-clips.tgz'
 
@@ -125,6 +126,9 @@ class AudioIdentify(object):
         
         # Connect the inputs with the outputs
         siamese_net = models.Model(inputs=[left_input, right_input],outputs=prediction)
+
+        LR = 1e-4
+        siamese_net.compile(loss="binary_crossentropy", optimizer = optimizers.Adam(lr = LR))
         
         # return the model
         return siamese_net
@@ -184,7 +188,7 @@ class AudioIdentify(object):
         #if time allows, multiple users to open the door
         
         # expect at least 3 clips from reference recording 
-        ref_clip_path = "./data/audio/x_english_ref_short.mp3"
+        ref_clip_path = "./data/audio/x_english_ref_3.mp3"
         ref_clips = self.get_clips(os.fspath(ref_clip_path), 3)
 
         return ref_clips
@@ -201,7 +205,7 @@ class AudioIdentify(object):
         ref_clips = self.get_clips(os.fspath(ref_clip_path), 3)
 
         model = self.get_siamese_model()
-        model.load_weights(f'./data/production/model/{MODEL_NAME}')
+        model.load_weights(f'./data/production/model/checkpoints/EN-TF1-Full-20200408-194433')
         
         return ref_clips, model
 
@@ -234,18 +238,12 @@ class AudioIdentify(object):
 
     def speech_unlock(self, model, left, right, SCORE_THRESHOLD):
         scores = model.predict([left, right])
-        print('model scores')
-        print(scores)
         score = np.mean(scores)
         unlock = score > SCORE_THRESHOLD
         return unlock, score
 
     def authenticate_voice(self, unlock_attempt_clip_path):
-        #get new trial voice for attempted unlock
-        unlock_attempt_clip_path = "./data/audio/x_english_ref_short_2.mp3"
-        print(f'unlock attempt clip path: {unlock_attempt_clip_path}')
         actual_clips = self.get_user_voice(os.fspath(unlock_attempt_clip_path))
-        print(f'actual clips len: {len(actual_clips)}')
         left, right = self.get_inference_dataset(self.ref_clips, actual_clips)
 
         unlock, score = self.speech_unlock(self.model, left, right, SCORE_THRESHOLD)

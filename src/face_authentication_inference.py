@@ -106,19 +106,19 @@ class FaceIdentify(object):
 
     def authenticate_face(self, faces, frame):
         if len(faces) == 0:
-            return False
+            return False, []
 
         # placeholder for cropped faces
         face_imgs = np.empty((len(faces), self.face_size, self.face_size, 3))
         for i, face in enumerate(faces):
             face_img, cropped = self.crop_face(frame, face, margin=10, size=self.face_size)
-            (x, y, w, h) = cropped
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 200, 0), 2)
             face_imgs[i, :, :, :] = face_img
         if len(face_imgs) > 0:
             features_faces = self.model.predict(face_imgs)
             predicted_names = [self.identify_face(features_face) for features_face in features_faces]
             valid_names = [pred_name for pred_name in predicted_names if pred_name in self.authenticated_names]
             if len(valid_names) > 0:
-                return True
-        return False
+                return True, predicted_names
+            else:
+                return False, predicted_names
+        return False, []
