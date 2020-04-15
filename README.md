@@ -28,10 +28,14 @@ Starts a loop waiting to authenticate a user's face and audio signals.
 3. docker run -it --privileged --device=/dev/video1:/dev/video1 doorlock 
 
 ##### Face Authentication
+This directory can be used to run face authentication in isolation.
+
 1. sudo docker run -it --privileged --device=/dev/video1:/dev/video1 face_auth
 2. Within the container, run python3 face_identify_demo.py
 
 ##### Audio Authentication
+This directory can be used to run audio authentication in isolation.
+
 1. cd audio_authentication
 2. docker build -t audio_auth .
 3. docker run -it audio_auth
