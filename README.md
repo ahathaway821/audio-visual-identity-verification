@@ -2,6 +2,22 @@
 
 This repository aims to use one-shot learning and a combination of speech and visual verification to authenticate a person for access. Using siamese networks, this project uses a very small example set for a new user in combination with trained siamese networks to classify if a person's voice and face match the small example set above a confidence threshold.
 
+#### Application Flow
+![alt text](./doorlock_flow_diagram.png)
+
+#### Overall Architecture
+![alt text](./doorlock_arch.png)
+
+1. Model training: Train audiomodel using powerful GPU enabled compute using Mozilla Voice Dataset
+
+2. Store model weights: Trained model information stored in S3
+
+3. Retrieve model weights: Pull down audio model weights from S3 and pull in pre-trained VGG Face model for inference on edge device
+
+4. Model inference: Using pre-trained models and local user data, perform authentication inference on NVIDIA Jetson TX2
+
+5. Authenticate users: Based on model output, optionally authenticate users
+
 #### How to Run
 
 ##### Doorlock User Authentication
