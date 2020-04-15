@@ -13,10 +13,10 @@ from tensorflow.keras import backend as K
 import librosa
 
 # Constants for IBM S3 values
-COS_ENDPOINT = 'https://s3.us-south.cloud-object-storage.appdomain.cloud'
-COS_API_KEY_ID = 'LKRr_5OhOyBgvHG6WH2wm9F_2bHC2sn1vV4eaCYdgpsm'
-COS_AUTH_ENDPOINT = 'https://iam.cloud.ibm.com/identity/token'
-COS_RESOURCE_CRN = 'crn:v1:bluemix:public:cloud-object-storage:global:a/ea337a3eba2f43c6b813f319db505255:0f9730a8-f2b8-42ce-b276-f9e13877a5f0::'
+COS_ENDPOINT = ''
+COS_API_KEY_ID = ''
+COS_AUTH_ENDPOINT = ''
+COS_RESOURCE_CRN = ''
 
 DATA_PATH = 'data/'
 BUCKET_NAME = 'cv-audio'

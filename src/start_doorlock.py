@@ -122,7 +122,6 @@ def start_user_authentication_loop():
 
     i = 0
     AUTHORIZED_AUDIO_TIME = 0
-    AUTHORIZED_FACE_TIME = 0
     AUTHORIZED_AUDIO = False
     AUTHORIZED_FACE = False
 
@@ -140,9 +139,6 @@ def start_user_authentication_loop():
                 minSize=(64, 64)
             )
 
-            #if i % 25 == 0:
-            #    print(i)
-
             # Audio Inference
             if i % 100 == 0 and AUTHORIZED_FACE:
                 print("STARTING AUDIO RECORDING")                        
@@ -159,18 +155,9 @@ def start_user_authentication_loop():
                 else:
                     is_audio_authed, conf = audio_model.authenticate_voice(WAVE_OUTPUT_FILENAME)
                     AUTHORIZED_AUDIO = AUTHORIZED_AUDIO or is_audio_authed
-                    #if AUTHORIZED_AUDIO:
-                    #    print("AUTHORIZED_AUDIO")
                     AUTHORIZED_AUDIO_TIME = i
-                    #else:
                     print(f"Audio authorized?: {AUTHORIZED_AUDIO} | Confidence: {conf}")
             
-            # Face Inference
-            #if i % 2 == 0:
-                #if AUTHORIZED_FACE and AUTHORIZED_FACE_TIME > i - 200:
-                    # video is still good -- no need to run it again
-                #    pass
-                #else: 
             is_face_authed, predicted_names = face_model.authenticate_face(faces, frame)
             if is_face_authed and not AUTHORIZED_FACE:
                 print("AUTHORIZED FACE")
